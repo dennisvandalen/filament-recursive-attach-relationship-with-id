@@ -45,13 +45,12 @@ $relationCountHash = $relationship->getRelationCountHash(false);
 $relationshipQuery
     ->when(
         !$table->allowsDuplicates(),
-        fn(Builder $query): Builder => $query->whereDoesntHave(
+        fn (Builder $query): Builder => $query->whereDoesntHave(
             $table->getInverseRelationship(),
-
-            fn(Builder $query): Builder => $query->where(
-            // https://github.com/filamentphp/filament/issues/8067
+            fn (Builder $query): Builder => $query->where(
+                // https://github.com/filamentphp/filament/issues/8067
                 $relationship->getParent()->getTable() === $relationship->getRelated()->getTable() ?
-                    $relationCount.'.'.$relationship->getParent()->getKeyName() :
+                    ($relationCountHash.'.'.$relationship->getParent()->getKeyName()) :
                     $relationship->getParent()->getQualifiedKeyName(),
                 $relationship->getParent()->getKey(),
             ),
